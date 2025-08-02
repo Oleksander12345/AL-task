@@ -11,6 +11,7 @@ import {
 } from "recharts";
 import type { LogEntry } from "../types/experiment";
 
+
 interface ChartViewProps {
   logData: LogEntry[];
   selectedExperiments: string[];

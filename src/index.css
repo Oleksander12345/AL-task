@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Глобальні стилі для canvas */
+canvas {
+  image-rendering: auto;
+  backface-visibility: hidden;
+  transform: translateZ(0); /* опціонально: форсувати GPU */
+}

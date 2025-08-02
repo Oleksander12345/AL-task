@@ -1,5 +1,5 @@
-import type { ChangeEvent } from "react";
-import { parseCSV } from "../utils/parseCsv";
+import { useState, useRef, type ChangeEvent } from "react";
+import CsvWorker from "../workers/parseCSV.worker.ts?worker";
 import type { LogEntry } from "../types/experiment";
 
 interface FileUploaderProps {
@@ -7,6 +7,11 @@ interface FileUploaderProps {
 }
 
 const FileUploader: React.FC<FileUploaderProps> = ({ onDataParsed }) => {
+  const [progress, setProgress] = useState<number>(0);
+  const [isParsing, setIsParsing] = useState<boolean>(false);
+  const workerRef = useRef<Worker | null>(null);
+  const bufferRef = useRef<LogEntry[]>([]);
+
   const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -15,8 +20,44 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onDataParsed }) => {
     reader.onload = (event) => {
       const text = event.target?.result;
       if (typeof text === "string") {
-        const parsedData = parseCSV(text)
-        onDataParsed(parsedData);
+        setIsParsing(true);
+        setProgress(0);
+        bufferRef.current = [];
+
+        const worker = new CsvWorker();
+        workerRef.current = worker;
+
+        worker.postMessage(text);
+
+        worker.onmessage = (e) => {
+          const { type, data, progress: p } = e.data;
+
+          if (type === "chunk" && Array.isArray(data)) {
+            bufferRef.current.push(...data);
+            if (typeof p === "number") {
+              setProgress(Math.min(100, Math.round(p * 100)));
+            }
+          }
+
+          if (type === "done") {
+            setIsParsing(false);
+            setProgress(100);
+            onDataParsed(bufferRef.current);
+            worker.terminate();
+          }
+
+          if (type === "error") {
+            console.error("Worker error:", data);
+            setIsParsing(false);
+            worker.terminate();
+          }
+        };
+
+        worker.onerror = (error) => {
+          console.error("Worker crash:", error);
+          setIsParsing(false);
+          worker.terminate();
+        };
       }
     };
 
@@ -39,6 +80,18 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onDataParsed }) => {
                    file:bg-blue-50 file:text-blue-700
                    hover:file:bg-blue-100"
       />
+
+      {isParsing && (
+        <div className="mt-4">
+          <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+            <div
+              className="bg-blue-600 h-2.5 rounded-full transition-all duration-200"
+              style={{ width: `${progress}%` }}
+            ></div>
+          </div>
+          <p className="text-sm text-gray-600 mt-1">{progress}% parsed</p>
+        </div>
+      )}
     </div>
   );
 };

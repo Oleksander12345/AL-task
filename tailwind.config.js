@@ -16,6 +16,7 @@ module.exports = {
         mono: ['Fira Code', 'monospace'],
       },
     },
+    darkMode: 'class',
   },
   plugins: [],
 }

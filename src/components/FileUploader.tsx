@@ -65,31 +65,35 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onDataParsed }) => {
   };
 
   return (
-    <div className="my-4">
-      <label className="block mb-2 text-sm font-medium text-gray-700">
+    <div className="my-6">
+      <label className="block mb-2 text-sm sm:text-base font-medium text-gray-300">
         Upload CSV file:
       </label>
+
       <input
         type="file"
         accept=".csv"
         onChange={handleFileUpload}
-        className="block w-full text-sm text-gray-500
-                   file:mr-4 file:py-2 file:px-4
-                   file:rounded-md file:border-0
-                   file:text-sm file:font-semibold
-                   file:bg-blue-50 file:text-blue-700
-                   hover:file:bg-blue-100"
+        className="block w-full text-sm text-gray-400
+          file:mr-2 sm:file:mr-4 file:py-2 file:px-3 sm:file:px-4
+          file:rounded-md file:border-0
+          file:text-sm sm:file:text-base file:font-semibold
+          file:bg-blue-600 file:text-white
+          hover:file:bg-blue-700
+          transition-all duration-200"
       />
 
       {isParsing && (
         <div className="mt-4">
-          <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+          <div className="w-full bg-gray-700 rounded-full h-2.5 overflow-hidden">
             <div
-              className="bg-blue-600 h-2.5 rounded-full transition-all duration-200"
+              className="bg-blue-500 h-2.5 transition-all duration-300"
               style={{ width: `${progress}%` }}
-            ></div>
+            />
           </div>
-          <p className="text-sm text-gray-600 mt-1">{progress}% parsed</p>
+          <p className="text-sm text-gray-400 mt-1 text-right sm:text-left">
+            {progress}% parsed
+          </p>
         </div>
       )}
     </div>

@@ -7,7 +7,7 @@ export const parseCSV = (csvText: string): LogEntry[] => {
   for (let i = 1; i < rows.length; i++) {
     const parts = rows[i].split(",");
 
-    if (parts.length !== 5) continue; // тепер очікуємо 5 колонок
+    if (parts.length !== 5) continue;
 
     const experiment_id = parts[1].trim();
     const metric_name = parts[2].trim();

@@ -31,7 +31,7 @@ interface MetricStats {
 
 const metricColorMap: Record<string, string> = {
   metric_1: "#3b82f6",
-  metric_2: "#f87171",
+  metric_2: "#c42edb",
   metric_3: "#22c55e",
   metric_4: "#facc15",
   metric_5: "#8b5cf6",

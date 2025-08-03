@@ -1,14 +1,15 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import FileUploader from "./components/FileUploader";
 import ExperimentList from "./components/ExperimentList";
 import ChartView from "./components/ChartView";
 import type { LogEntry } from "./types/experiment";
+import { saveLogData, loadLogData } from "./utils/db";
 
 function App() {
   const [logData, setLogData] = useState<LogEntry[]>([]);
   const [selectedExperiments, setSelectedExperiments] = useState<string[]>([]);
   const [selectedMetric, setSelectedMetric] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const metricDisplayMap: Record<string, string> = {
     metric_1: "train_loss",
@@ -27,15 +28,21 @@ function App() {
     [logData]
   );
 
-  const handleParsedData = (data: LogEntry[]) => {
+  const handleParsedData = async (data: LogEntry[]) => {
     setIsLoading(true);
-    setTimeout(() => {
-      setLogData(data);
-      setSelectedExperiments([]);
-      setSelectedMetric(null);
-      setIsLoading(false);
-    }, 50);
+    await saveLogData(data);
+    setLogData(data);
+    setSelectedExperiments([]);
+    setSelectedMetric(null);
+    setIsLoading(false);
   };
+
+  useEffect(() => {
+    loadLogData().then((data) => {
+      if (data) setLogData(data);
+      setIsLoading(false);
+    });
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-900 text-white px-4 sm:px-6 py-10 font-sans">

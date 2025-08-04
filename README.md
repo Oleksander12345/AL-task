@@ -1,69 +1,41 @@
-# React + TypeScript + Vite
+# Experiment Log Visualizer 📈
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A performant CSV visualizer for MLOps experiment logs.  
+Upload a large `.csv` file containing experiment metrics and explore line charts per metric across multiple experiments.
 
-Currently, two official plugins are available:
+## 🌐 Live Demo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+➡️ [Visit the hosted application](https://al-task.vercel.app/)
 
-## Expanding the ESLint configuration
+## 📂 Repository
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+➡️ [GitHub Repository](https://github.com/Oleksander12345/AL-task)
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🧩 Features
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+- ✅ Upload and parse CSV files with hundreds of thousands of rows
+- ✅ Efficient parsing using Web Workers and streaming with PapaParse
+- ✅ Persistent storage via IndexedDB (data stays after page reload)
+- ✅ Select up to 3 experiments to visualize concurrently
+- ✅ Switch between metrics (`train_loss`, `val_accuracy`, etc.)
+- ✅ Display average, min, and max values for selected experiments
+- ✅ Responsive chart built with Recharts
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## ⚙️ Tech Stack
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- **React + TypeScript**
+- **Recharts** — chart rendering
+- **PapaParse** — CSV parsing
+- **IndexedDB** — persistent data storage
+- **Tailwind CSS** — styling
+- **Web Workers** — async parsing without UI blocking
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 📦 Getting Started
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+To run locally:
+
+```bash
+git clone https://github.com/Oleksander12345/AL-task.git
+cd AL-task
+npm install
+npm run dev
